@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "native-security": {
+      "type": "streamable-http",
+      "url": "https://mcp.native.security/mcp"
+    }
+  }
+}
