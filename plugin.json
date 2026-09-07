@@ -1,0 +1,39 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "native-security",
+  "version": "1.0.0",
+  "description": "Operate the Native cloud-security platform from Kiro: explore your AWS, Azure, Google Cloud and OCI estate, manage and safely apply security policies, route changes through peer review, verify deployment health, investigate blocked actions and CNAPP findings, and find sensitive data. Every action runs through the Native MCP connector with the user's own OAuth identity.",
+  "author": {
+    "name": "Native Security",
+    "url": "https://native.security"
+  },
+  "homepage": "https://docs.native.security/integrations/ai-agents",
+  "repository": "https://github.com/native-security/native-security-kiro-power",
+  "license": "MIT",
+  "keywords": [
+    "native-security",
+    "native",
+    "cloud-security",
+    "cspm",
+    "cnapp",
+    "dspm",
+    "policy",
+    "guardrails",
+    "compliance",
+    "drift",
+    "iac",
+    "terraform",
+    "aws",
+    "azure",
+    "gcp",
+    "oci",
+    "posture",
+    "misconfiguration",
+    "blocked-actions",
+    "deployment-health",
+    "intention-review",
+    "sensitive-data",
+    "zones",
+    "segmentation"
+  ]
+}
