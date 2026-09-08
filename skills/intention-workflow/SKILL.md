@@ -24,17 +24,21 @@ Identity comes from the user's token. Decisions and notes are recorded for the c
 
 ## Tools
 
+<!-- BEGIN GENERATED: tools (scripts/sync-from-connector.py) -->
+### Tools
+
 | Tool | What it does |
 |---|---|
-| `intention_get_suggested_reviewers` | The organization's suggested reviewers for this intention, computed from intention owners, scope stakeholders and security contacts. Use it to pre-fill `reviewerEmails`. |
-| `intention_start_review` | Opens the review on a Draft (`desiredStateId` + `organizationId`; optional `reviewerEmails`, `message`, and `simulationHasImpact` / `simulationSummary` from `policy_simulate`). One open review per Draft. |
-| `intention_get_review_status` | The `ReviewState`: `reviewStatus`, `currentApprovalCount` versus `minApprovalsRequired`, each participant's decision, and the `history` audit trail. |
-| `intention_record_decision` | Records the calling user's decision. `decision` is `approve` or `reject` (anything else is `VALIDATION_FAILED`), with an optional `note`. |
-| `intention_add_note` | A comment without a decision. Appears in `history` for every participant. |
-| `intention_add_reviewer` | Invites more reviewers to an existing review. |
-| `intention_remove_reviewer` | Removes an invitee who has not acted yet. Returns 409 once they have decided. |
-| `intention_resend_reviewer_notification` | Re-sends the invitation to one reviewer who has not acted. |
-| `intention_cancel_review` | Withdraws an in-progress review. Returns 409 if already approved; undo an approved change with a new review on a reverse change. |
+| `intention_get_suggested_reviewers` | Fetch the org's suggested reviewers for this Intention. Backend computes the list from intention owners, scope stakeholders, and security contacts. |
+| `intention_start_review` | Open a peer-review on a Draft Intention before applying it. Sends invites to the reviewer emails the user provided (or to suggested reviewers from intention_get_suggested_reviewers). (write) |
+| `intention_get_review_status` | Read the current ReviewState of the Intention's open review: reviewStatus, approval count vs. |
+| `intention_record_decision` | Record the calling user's approve/reject decision on a review. (write) |
+| `intention_add_note` | Append a comment to a review without recording a decision. The note shows up in ReviewState.history for every participant. (write) |
+| `intention_add_reviewer` | Invite additional reviewers to an existing review. Useful when the initial invitees haven't acted, or the user wants additional sign-off. (write) |
+| `intention_remove_reviewer` | Remove an invited reviewer who hasn't yet acted. Returns 409 if the reviewer already recorded a decision (the audit trail is immutable). (write) |
+| `intention_resend_reviewer_notification` | Re-send the review notification to a single reviewer who hasn't yet acted (e.g. (write) |
+| `intention_cancel_review` | Cancel an in-progress review. Returns 409 if the review is already approved (the audit trail is immutable past approval). (write) |
+<!-- END GENERATED: tools -->
 
 Related tools owned by the policy-manager skill: `policy_prepare_change` (creates the Draft), `policy_list_intentions` (find Drafts and their state), `policy_delete_intention` (remove an abandoned Draft, gated).
 

@@ -1,0 +1,212 @@
+{
+  "$comment": "Maps connector tool groups and tools onto this power's skills. Read by scripts/sync-from-connector.py. A tool that belongs to a mapped group but is not listed in any section is placed in an auto-generated 'New tools (needs placement)' section of that skill, which scripts/validate.py rejects until a human moves it. A tool whose group matches no skill is reported as unassigned.",
+  "defaultOffFlags": [
+    "FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS",
+    "FLAG_MCP_CONNECTOR_DSPM_TOOLS",
+    "FLAG_MCP_CONNECTOR_CNAPP_TOOLS"
+  ],
+  "skills": {
+    "platform-utilities": {
+      "readmeTitle": "Connector & Session",
+      "groups": ["connector"],
+      "sections": [
+        {
+          "title": "Tools",
+          "tools": [
+            "who_am_i",
+            "list_organizations",
+            "list_capabilities",
+            "get_prompt",
+            "read_resource",
+            "get_console_link",
+            "get_whats_new",
+            "self_test",
+            "revoke_session"
+          ]
+        }
+      ]
+    },
+    "environment-explorer": {
+      "readmeTitle": "Environment",
+      "groups": ["environment"],
+      "readmeMerged": true,
+      "sections": [
+        {
+          "title": "Always registered",
+          "tools": [
+            "environment_summarize",
+            "environment_list_cloud_units",
+            "environment_get_cloud_unit_details",
+            "environment_get_organization_tree",
+            "environment_list_zones",
+            "environment_get_zone_overview",
+            "environment_get_zone_inventory",
+            "environment_triage_inventory_item",
+            "environment_list_effective_policies",
+            "environment_explain_coverage_risks",
+            "environment_show_sync_status"
+          ]
+        },
+        {
+          "title": "Behind `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS` (off by default)",
+          "tools": [
+            "environment_get_zone_connectivity",
+            "environment_summarize_connectivity",
+            "environment_get_zone_relationships"
+          ]
+        },
+        {
+          "title": "Behind `FLAG_MCP_CONNECTOR_DSPM_TOOLS` (off by default)",
+          "tools": [
+            "environment_summarize_data_sensitivity",
+            "environment_list_sensitive_resources"
+          ]
+        }
+      ]
+    },
+    "policy-manager": {
+      "readmeTitle": "Policy",
+      "groups": ["policy", "plan"],
+      "sections": [
+        {
+          "title": "Discover and explain",
+          "readmeTitle": "Policy: Discover & Explain",
+          "tools": [
+            "policy_list_catalog",
+            "policy_explain",
+            "policy_list_controls",
+            "policy_search_parameters",
+            "policy_get_parameter_definitions",
+            "policy_list_vocabulary",
+            "policy_get_effective_parameters",
+            "policy_get_history"
+          ]
+        },
+        {
+          "title": "Deployment state, coverage and drift",
+          "readmeTitle": "Policy: State, Coverage & Drift",
+          "tools": [
+            "policy_list_intentions",
+            "policy_inspect_cloud_object",
+            "policy_check_drift",
+            "policy_compliance_coverage",
+            "policy_cross_org_coverage",
+            "policy_get_org_settings",
+            "policy_get_breakglass_roles"
+          ]
+        },
+        {
+          "title": "Recommendations and optimization",
+          "readmeTitle": "Policy: Recommend & Tune",
+          "tools": [
+            "policy_recommend_next",
+            "policy_list_recommendations",
+            "policy_suggest_intention",
+            "policy_get_optimization",
+            "policy_dismiss_optimization",
+            "policy_update_annotations"
+          ]
+        },
+        {
+          "title": "Preview, IaC and change",
+          "readmeTitle": "Policy: Preview, IaC & Change",
+          "tools": [
+            "policy_simulate",
+            "policy_show_implementation_steps",
+            "policy_generate_iac",
+            "policy_prepare_change",
+            "policy_apply_change",
+            "policy_revert_to_revision",
+            "policy_abort_execution",
+            "policy_set_drift_recovery",
+            "policy_delete_intention"
+          ]
+        },
+        {
+          "title": "Exceptions",
+          "readmeTitle": "Policy: Exceptions & Plans",
+          "tools": [
+            "policy_search_exceptions",
+            "policy_list_exception_subjects"
+          ]
+        },
+        {
+          "title": "Plans",
+          "readmeMergeWithPrevious": true,
+          "tools": [
+            "plan_list",
+            "plan_get_status"
+          ]
+        }
+      ]
+    },
+    "intention-workflow": {
+      "readmeTitle": "Intention Review",
+      "groups": ["intention.review"],
+      "sections": [
+        {
+          "title": "Tools",
+          "tools": [
+            "intention_get_suggested_reviewers",
+            "intention_start_review",
+            "intention_get_review_status",
+            "intention_record_decision",
+            "intention_add_note",
+            "intention_add_reviewer",
+            "intention_remove_reviewer",
+            "intention_resend_reviewer_notification",
+            "intention_cancel_review"
+          ]
+        }
+      ]
+    },
+    "deployment-health": {
+      "readmeTitle": "Deployment Health",
+      "groups": ["deployment_health"],
+      "sections": [
+        {
+          "title": "Tools",
+          "tools": [
+            "deployment_health_check",
+            "deployment_health_deny_series",
+            "deployment_health_get_metrics",
+            "deployment_health_list_metrics",
+            "deployment_health_apply_events",
+            "deployment_health_scope_search"
+          ]
+        }
+      ]
+    },
+    "posture-and-findings": {
+      "readmeTitle": "Posture & Findings",
+      "groups": ["cnapp", "blocked_actions", "custom_policy"],
+      "sections": [
+        {
+          "title": "CNAPP (behind `FLAG_MCP_CONNECTOR_CNAPP_TOOLS`, off by default)",
+          "readmeTitle": "CNAPP (flagged)",
+          "tools": [
+            "cnapp_get_posture",
+            "cnapp_list_findings"
+          ]
+        },
+        {
+          "title": "Blocked actions",
+          "readmeTitle": "Blocked Actions & Custom Policies",
+          "tools": [
+            "blocked_actions_search",
+            "blocked_actions_get",
+            "blocked_actions_filter_values"
+          ]
+        },
+        {
+          "title": "Custom policies",
+          "readmeMergeWithPrevious": true,
+          "tools": [
+            "custom_policy_list",
+            "custom_policy_explain"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "connectorRepo": "rocksteady-cloud/native-mcp-connector",
+  "connectorCommit": "bdafcd864a75afd0a04f0a2e843b52043a666b37",
+  "inventoryVersion": "1",
+  "toolCount": 81,
+  "groups": {
+    "blocked_actions": 3,
+    "cnapp": 2,
+    "connector": 9,
+    "custom_policy": 2,
+    "deployment_health": 6,
+    "environment": 16,
+    "intention.review": 9,
+    "plan": 2,
+    "policy": 32
+  },
+  "destructiveTools": [
+    "policy_abort_execution",
+    "policy_apply_change",
+    "policy_delete_intention",
+    "policy_revert_to_revision",
+    "policy_set_drift_recovery"
+  ]
+}

@@ -34,36 +34,38 @@ Canonical vocabulary lives in `resource://native/terminology` (read it with `rea
 
 ## Tools
 
+<!-- BEGIN GENERATED: tools (scripts/sync-from-connector.py) -->
 ### Always registered
 
 | Tool | What it does |
 |---|---|
-| `environment_summarize` | Summarizes the tenant's cloud footprint, or one organization, in a single call: provider counts and a per-organization rollup. |
-| `environment_list_cloud_units` | Enumerates cloud units tenant-wide or within one organization. Rows carry `parentNodeId` and `nodePath` when hierarchy data exists. |
-| `environment_get_cloud_unit_details` | One cloud unit in full: services, regions, cost, owners, third parties, policy installation counts, recent blocked actions, CNAPP digest, account data-sensitivity block. |
-| `environment_get_organization_tree` | The full cloud hierarchy of one organization (AWS OUs, Azure management groups, GCP folders, OCI compartments) as one normalized tree. |
-| `environment_list_zones` | Lists zones tenant-wide or in one organization, with optional `name` filter. |
-| `environment_get_zone_overview` | One zone's topology booleans and connectivity headline, CNAPP digest, data sensitivity, cost by category, services, regions, owners and policy counts. |
-| `environment_get_zone_inventory` | Zone-level used services, used regions and resource statistics. |
-| `environment_triage_inventory_item` | Looks up a cloud unit by its **cloud-unit-level** external id (AWS account number, Azure subscription id, GCP project id, OCI OCID) and returns its details. |
-| `environment_list_effective_policies` | Policies effective on a tenant, organization, zone or cloud unit, with totals and, on zones, direct versus inherited source. |
-| `environment_explain_coverage_risks` | For each policy whose coverage is missing or partial in scope, explains why that policy matters. Read-only. |
+| `environment_summarize` | Summarize the tenant's cloud footprint or one organization in a single call. |
+| `environment_list_cloud_units` | Enumerate cloud units across the tenant or within one organization. |
+| `environment_get_cloud_unit_details` | Return one cloud unit's services, regions, cost, owners, third parties, policy installation counts, recent Blocked Actions, CNAPP digest and account data-sensitivity block. |
+| `environment_get_organization_tree` | Return the full cloud organization hierarchy for one Native organization. |
+| `environment_list_zones` | List zones across the tenant or in one organization. |
+| `environment_get_zone_overview` | Return one zone's topology (derived booleans + connectivity headline), CNAPP digest, data sensitivity, cost-by-category, used services / regions, owners, and policy counts. |
+| `environment_get_zone_inventory` | Return zone-level used services, used regions, and resource statistics. |
+| `environment_triage_inventory_item` | Look up a cloud unit by its cloud-unit-level external id and return its details. |
+| `environment_list_effective_policies` | List policies effective on a tenant / organization / zone / cloud unit, with totals and (zone-only) direct vs inherited source. |
+| `environment_explain_coverage_risks` | For each policy whose coverage is missing or partial in scope, explain why the policy matters (sourced from PolicyDetailsV2.whyThisPolicyMatters). |
 | `environment_show_sync_status` | Per-organization sync status: current status, last sync time, most recent workflow, onboarding template freshness. |
 
 ### Behind `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS` (off by default)
 
 | Tool | What it does |
 |---|---|
-| `environment_get_zone_connectivity` | One zone's external connections (dedicated circuits, private endpoints, site-to-site VPNs) with derived booleans, optional hubs and peers, or one connection in full. |
-| `environment_summarize_connectivity` | Estate-wide rollup of connections, network hubs and zone peers in one tenant-wide call. Never returns connection rows. |
-| `environment_get_zone_relationships` | One zone's structural relationships: parents, children, siblings, intersections, identical zones. Membership sets, not network paths. |
+| `environment_get_zone_connectivity` | Return one zone's external connections — dedicated circuits, private endpoints and site-to-site VPNs — with the derived booleans, optional network hubs and zone peers, and one connection in full detail. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_summarize_connectivity` | Roll up the estate's external connections, network hubs and zone peers in one call: counts by kind, provider, state and risk flag, hubs folded by union, each peer edge once, and which risk flags have a producer. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_get_zone_relationships` | Return one zone's structural relationships — parents, children, siblings, intersections and identical zones — so scope overlap can be reasoned about before a policy install. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
 
 ### Behind `FLAG_MCP_CONNECTOR_DSPM_TOOLS` (off by default)
 
 | Tool | What it does |
 |---|---|
-| `environment_summarize_data_sensitivity` | Counts sensitive resources by rating, type, source and resource type for any scope kind, with a `coverage` block naming what was scanned. |
-| `environment_list_sensitive_resources` | The rated buckets and datastores in one organization, cloud unit or zone, each attributed to the scanner that rated it. Paged. |
+| `environment_summarize_data_sensitivity` | Count sensitive resources by rating, sensitivity type, source and resource type for a tenant, organization, zone or cloud unit, with a coverage block naming what was scanned. (flagged: `FLAG_MCP_CONNECTOR_DSPM_TOOLS`) |
+| `environment_list_sensitive_resources` | List the resources carrying a sensitivity rating in one organization, cloud unit or zone, each attributed to the scanner that rated it. (flagged: `FLAG_MCP_CONNECTOR_DSPM_TOOLS`) |
+<!-- END GENERATED: tools -->
 
 ## Step-by-step
 

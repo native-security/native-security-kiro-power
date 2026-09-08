@@ -25,27 +25,29 @@ Three small tool groups answer "what is being reported?":
 
 ## Tools
 
-### CNAPP (flagged)
+<!-- BEGIN GENERATED: tools (scripts/sync-from-connector.py) -->
+### CNAPP (behind `FLAG_MCP_CONNECTOR_CNAPP_TOOLS`, off by default)
 
 | Tool | What it does |
 |---|---|
-| `cnapp_get_posture` | Findings and Risks by finding source for a tenant, organization, zone or cloud unit, with a `coverage` block saying which sources could have reported at all. `includePolicyBuckets: true` adds per-managed-policy buckets (ignored at zone grain). |
-| `cnapp_list_findings` | One cloud unit's open findings per managed policy, by severity and source. `hydrate: true` with `policyTemplateId`, `source` and `severity` returns the findings themselves; `kind: "risks"` returns Wiz Issues. Lists exist at cloud-unit grain only. |
+| `cnapp_get_posture` | Report CNAPP findings and Risks by finding source for a tenant, organization, zone or cloud unit, with a coverage block that says which sources could have reported at all. (flagged: `FLAG_MCP_CONNECTOR_CNAPP_TOOLS`) |
+| `cnapp_list_findings` | List one cloud unit's open CNAPP findings per managed policy, by severity and finding source, so an agent can say which Native policy would remove the most of them. (flagged: `FLAG_MCP_CONNECTOR_CNAPP_TOOLS`) |
 
 ### Blocked actions
 
 | Tool | What it does |
 |---|---|
-| `blocked_actions_search` | Denied attempts with friendly filters: action or identity substring, region, policy template or intention, identity type, and a relative or ISO time window. Paginated with a `next_page` cursor. |
-| `blocked_actions_get` | One event in full: the raw provider audit event plus links to the intentions that produced the denial. |
-| `blocked_actions_filter_values` | Distinct values for one field so you can offer real choices before searching. |
+| `blocked_actions_search` | Search blocked-action (denial) events with friendly filters — action/identity substring, region, policy template or intention, identity type, and a relative or ISO time window. |
+| `blocked_actions_get` | Fetch one blocked-action event by id with full forensic detail — the raw provider audit event plus connector-enriched links to the Native intentions that produced the denial. |
+| `blocked_actions_filter_values` | List the distinct values present for one filterable field (identityType, identityName, region, policyIds, actionType, policyType, thirdParty) in a scope/window, so you can offer concrete choices before calling blocked_actions_sea… |
 
 ### Custom policies
 
 | Tool | What it does |
 |---|---|
-| `custom_policy_list` | User-authored custom policies (paginated client-side). |
-| `custom_policy_explain` | One custom policy in full: metadata, per-provider statement bodies (AWS, Azure, GCP, OCI), security domains. |
+| `custom_policy_list` | List user-authored custom policies. Composes GET /v2/policy-management/policies with type=Custom; paginates client-side because the endpoint has no page cursor. |
+| `custom_policy_explain` | Read one user-authored custom policy in full: metadata, per-provider statement bodies (AWS / Azure / GCP / OCI), security domains. |
+<!-- END GENERATED: tools -->
 
 ## CNAPP: the source table
 
