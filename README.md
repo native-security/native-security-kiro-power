@@ -74,7 +74,7 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 |---|---|
 | `who_am_i` | Identify the current user: name, email, selected tenant, permissions, roles, and tenant logo. |
 | `list_organizations` | List the tenant's onboarded organizations the user has a role in. |
-| `list_capabilities` | Enumerate the tool groups available to this session (filtered by granted scopes). |
+| `list_capabilities` | Enumerate the tool groups, curated prompts and resources available to this session (filtered by granted scopes). |
 | `get_prompt` | Fetch the body of one of the connector's curated MCP prompts (drift-triage, prepare-change, recommend-next, …). |
 | `read_resource` | Read the content of one of the connector's published MCP resources (terminology map, capability matrix, troubleshooting playbooks, policy-kinds catalogue). |
 | `get_console_link` | Return a Native console deep link for any task or resource the user wants to see in the UI. |
