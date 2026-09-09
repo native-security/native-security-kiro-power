@@ -28,65 +28,65 @@ Read `prompt://native/scope` (via `get_prompt`) once per session: default to the
 
 | Tool | What it does |
 |---|---|
-| `policy_list_catalog` | Paginated catalog of every template: `policyTemplateId`, name, status, `supportedProviders`, `allowedScopes`, `securityDomains`, `declaredParameters`, `hasGoal`, deployment counts. Filter by provider. |
-| `policy_explain` | Plain-language explanation of one template with the backend-authored `goal`, providers, scopes and a deployment summary by status state. Optional `intentionId` drill-down. |
-| `policy_list_controls` | Enforcement mechanisms per template (SCP, Azure Policy, GCP Org Policy, native reactive controls) with per-provider counts. |
-| `policy_search_parameters` | Search every template's declared parameters by keyword, provider, valuesSource, catalog or required-ness. Use when the user asks by the knob, not the policy name. |
-| `policy_get_parameter_definitions` | Parameter schema, defaults, curated options, provider applicability; `resolve=true` returns the closed `allowedValues` per provider. |
-| `policy_list_vocabulary` | The canonical value universe for `kind=services`, `aiModels` or `regions` on one provider. Ids join 1:1 to `allowedValues`. |
-| `policy_get_effective_parameters` | The parameter values in effect for one template across the intentions deployed in a scope. The single-call answer to "what does policy X allow in scope Y?". |
-| `policy_get_history` | Revision history of a template, or one revision's coverage. |
+| `policy_list_catalog` | Paginated listing of every policy template in the Native catalog (the agent's discovery surface for policy_explain / policy_recommend_next / policy_suggest_intention). |
+| `policy_explain` | Explain a policy template in plain language: title, why it matters, implementation description, supported cloud providers and target scopes, plus a deployment summary (Intention counts by status state per the canonical Draft/Acti… |
+| `policy_list_controls` | List enforcement mechanisms (SCP, Azure Policy, GCP Org Policy, native reactive controls) per policy template, grouped by enforcement vs native + per-cloud-provider counts. |
+| `policy_search_parameters` | Search every managed policy template's declared parameters in one call — the cross-template discovery surface for "which policy can configure X?" questions. |
+| `policy_get_parameter_definitions` | Return the backend-authored parameter schema, defaults, curated options, provider applicability, and optionally resolved region/service values for one managed policy template. |
+| `policy_list_vocabulary` | List the canonical value universe for one vocabulary kind (cloud services, AI models, or regions) on one cloud provider — the ids that policy parameter allowedValues join against. |
+| `policy_get_effective_parameters` | Return the effective parameter values (allowed regions, encryption flags, etc.) for one policy template across the intentions deployed in a scope. |
+| `policy_get_history` | Read the revision history of a policy template (template-rollup) or drill into one revision's coverage (revision mode). |
 
 ### Deployment state, coverage and drift
 
 | Tool | What it does |
 |---|---|
-| `policy_list_intentions` | Deployed intentions in a scope with status state (pending, in-progress, ok, drift, error, and so on), derived health, coverage (installed, partial, missing), recent violation counts, plan memberships, annotations. |
-| `policy_inspect_cloud_object` | For one cloud object: which templates cover it, per-template coverage, optional live-state drill-down. |
-| `policy_check_drift` | Drifting intentions in a scope, freshest first. |
-| `policy_compliance_coverage` | Regulatory-framework rollup (CIS, NIST, SOC 2, HIPAA and others) from catalog tags and enforcement counts. Tenant-global. |
-| `policy_cross_org_coverage` | Per-template, per-organization matrix: installed, partial, missing, none, notApplicable. |
-| `policy_get_org_settings` | Org-level defaults: drift recovery, auto-import tracking, review requirements, attachment limits, break-glass list. |
-| `policy_get_breakglass_roles` | The org's break-glass identities that escape enforcement. |
+| `policy_list_intentions` | List deployed Intentions in a scope (tenant by default; or organization / zone / cloudUnit when specified) with their status state, derived health, coverage, recent violation counts, target scope UUIDs, plan memberships, and anno… |
+| `policy_inspect_cloud_object` | Inspect one cloud object (account, project, OU, …): which policy templates cover it, per-template coverage (installed/partial/missing/notInstalled), and an optional per-template drill-down into the live policy state. |
+| `policy_check_drift` | List drifting Intentions in a scope (status.state="drift" — Intentions whose desired state has diverged from the actual cloud state). |
+| `policy_compliance_coverage` | Roll up regulatory-framework coverage (CIS, NIST, SOC 2, HIPAA, …) by composing the policy catalog's complianceStandards tags with the per-template enforcement-mechanism counts. |
+| `policy_cross_org_coverage` | Compare policy coverage across all organizations in the tenant in one call. |
+| `policy_get_org_settings` | Read the org-level policy defaults: drift recovery, auto-import tracking, review requirements, attachment limits, plus the breakglass identity list. |
+| `policy_get_breakglass_roles` | List the org's breakglass identities (emergency-bypass IAM principals that escape policy enforcement). |
 
 ### Recommendations and optimization
 
 | Tool | What it does |
 |---|---|
-| `policy_recommend_next` | The next policy to deploy, walking Getting Started, AI Guardrails, Multi-Cloud Alignment. Carries an `attentionReason`. `includeCnappEvidence: true` adds Wiz-only finding counts. |
-| `policy_list_recommendations` | Every attention-worthy intention (Draft, drift, error) across plans, paginated. |
-| `policy_suggest_intention` | Scope-aware default `parameters` for a new intention. Call after picking a template and before `policy_prepare_change`. |
-| `policy_get_optimization` | The backend's optimization suggestion for one intention, or `Available=false` with a reason. |
-| `policy_dismiss_optimization` | Marks an optimization dismissed. Preference write, no cloud change, no gate. |
-| `policy_update_annotations` | Merges `metadata.annotations` into an intention. Additive; connector-reserved keys are rejected. |
+| `policy_recommend_next` | Recommend the next policy to deploy by walking Getting Started -> AI Guardrails -> Multi-Cloud Alignment, falling back to a structured guidance prompt when no plan applies. |
+| `policy_list_recommendations` | Full paginated listing of every attention-worthy Intention across every plan (Draft / drift / error). |
+| `policy_suggest_intention` | Pre-fill the parameters object for a new Intention before calling policy_prepare_change. |
+| `policy_get_optimization` | Fetch the backend's optimization suggestion for one Intention. |
+| `policy_dismiss_optimization` | Mark an optimization as dismissed so the reconciler stops re-suggesting it for this Intention. (write) |
+| `policy_update_annotations` | Merge user-supplied metadata.annotations into an Intention's desired-state document. (write) |
 
 ### Preview, IaC and change
 
 | Tool | What it does |
 |---|---|
-| `policy_simulate` | Read-only impact preview without creating a Draft: coverage attestation, `hasImpact` verdict, paste-ready `evidenceMarkdown`. Requires an organization. |
-| `policy_show_implementation_steps` | The concrete per-object steps the backend would execute for a PolicyAction on given targets. Read-only. |
-| `policy_generate_iac` | Renders a PolicyAction plus targets as Terraform. Same inputs as implementation steps; no prior call required. |
-| `policy_prepare_change` | **Mutating.** Creates a Draft Intention and returns `changeId` plus `confirmationPhrase`, with the embedded simulation, `coverage`, `evidenceMarkdown` and `parameterWarnings`. Requires `organizationId`; tenant scope is rejected. |
-| `policy_apply_change` | **Destructive.** Flips the Draft to enforcing. Requires the user-typed `confirmationPhrase`. |
-| `policy_abort_execution` | **Destructive.** Aborts an in-progress execution. Same-tool two-call gate. |
-| `policy_revert_to_revision` | **Destructive.** Rewrites an intention's desired state to a prior revision. Same-tool two-call gate. |
-| `policy_set_drift_recovery` | **Destructive when enabling.** Toggles auto-remediation on one intention. Both directions use the gate. |
-| `policy_delete_intention` | **Destructive.** Permanently deletes an intention and its drafts. Same-tool two-call gate. |
+| `policy_simulate` | Read-only preview of a policy's impact on an environment, WITHOUT creating a Draft Intention. |
+| `policy_show_implementation_steps` | Compute the concrete per-cloud-object steps the backend would execute to apply a PolicyAction to the given targets. |
+| `policy_generate_iac` | Render a PolicyAction + targets directly as Infrastructure-as-Code (Terraform today). |
+| `policy_prepare_change` | Create a Draft Intention on the backend (status.state=pending) AFTER the user has confirmed the parameters policy_suggest_intention proposed. (write) |
+| `policy_apply_change` | Flip the Draft Intention created by policy_prepare_change to enforcing. (**destructive**, confirmation phrase) |
+| `policy_revert_to_revision` | Rewrite an Intention's desired state to a prior revision. DESTRUCTIVE — gated by FLAG_MCP_CONNECTOR_APPLY_CHANGE and a deterministic confirmation phrase the user must echo back. (**destructive**, confirmation phrase) |
+| `policy_abort_execution` | Abort an in-progress execution on an Intention (only valid while statusState is in-progress / deleting). (**destructive**, confirmation phrase) |
+| `policy_set_drift_recovery` | Toggle automatic drift recovery on a single Intention. ENABLING is destructive (Native will auto-remediate cloud state on drift); DISABLING reverts to manual remediation. (**destructive**, confirmation phrase) |
+| `policy_delete_intention` | Permanently delete an Intention (its desired-state document and any associated drafts). (**destructive**, confirmation phrase) |
 
 ### Exceptions
 
 | Tool | What it does |
 |---|---|
-| `policy_search_exceptions` | Configured exclusions plus break-glass identities, with typed filters, facet counts and a reverse lookup (`subjectType` + `subject`, or `subjectContains`). |
-| `policy_list_exception_subjects` | Distinct excluded values on one dimension (`identity`, `resource`, `tag`, `cloudUnitId`, `cidr`). Call before a reverse lookup: the lookup matches exactly. |
+| `policy_search_exceptions` | Search the tenant's configured policy exceptions — the exclusions declared on intentions plus organization break-glass identities — with typed filters, KPI facet counts and a reverse lookup answering "which policies exclude this… |
+| `policy_list_exception_subjects` | List the distinct values actually excluded on one subject dimension (identity, resource, tag, cloudUnitId, cidr) so a policy_search_exceptions reverse lookup is offered real choices instead of a guessed ARN. |
 
 ### Plans
 
 | Tool | What it does |
 |---|---|
-| `plan_list` | Tenant-visible plans (Getting Started, AI Guardrails, Multi-Cloud Alignment, user-created), optional active filter and per-plan progress. |
-| `plan_get_status` | One plan's per-status breakdown, progress percentage and `nextAction` (Draft before drift before error). |
+| `plan_list` | List tenant-visible plans (Getting Started, AI Guardrails, Multi-Cloud Alignment, user-created, shared-target-list). |
+| `plan_get_status` | Fetch one plan's per-status-state intention breakdown, progress percentage, and the agent's recommended next action (highest-priority attention-worthy intention in the plan: Draft > drift > error). |
 
 ## The apply gate
 
