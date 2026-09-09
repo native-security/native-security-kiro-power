@@ -22,8 +22,6 @@ The `connector` group is the plumbing every other skill relies on: identity, cap
 
 ## Tools
 
-### Tools
-
 | Tool | What it does |
 |---|---|
 | `who_am_i` | Identify the current user: name, email, selected tenant, permissions, roles, and tenant logo. |
