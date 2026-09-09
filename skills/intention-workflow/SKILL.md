@@ -26,8 +26,6 @@ Identity comes from the user's token. Decisions and notes are recorded for the c
 
 Related tools owned by the policy-manager skill: `policy_prepare_change` (creates the Draft), `policy_list_intentions` (find Drafts and their state), `policy_delete_intention` (remove an abandoned Draft, gated).
 
-### Tools
-
 | Tool | What it does |
 |---|---|
 | `intention_get_suggested_reviewers` | Fetch the org's suggested reviewers for this Intention. Backend computes the list from intention owners, scope stakeholders, and security contacts. |

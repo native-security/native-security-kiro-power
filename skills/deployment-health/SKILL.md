@@ -23,8 +23,6 @@ Vocabulary note: the backend calls each signal a *capability*; the agent surface
 
 ## Tools
 
-### Tools
-
 | Tool | What it does |
 |---|---|
 | `deployment_health_check` | Answer "did this policy's recent apply break anything — keep it or revert?" for one intention, or inspect an organization's health at a point in time. |

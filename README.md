@@ -204,8 +204,6 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 | `custom_policy_list` | List user-authored custom policies. Composes GET /v2/policy-management/policies with type=Custom; paginates client-side because the endpoint has no page cursor. |
 | `custom_policy_explain` | Read one user-authored custom policy in full: metadata, per-provider statement bodies (AWS / Azure / GCP / OCI), security domains. |
 
-**CNAPP** (flagged)
-
 ### Skills: 6 Operational Guidance Modules
 
 Each skill wraps one connector tool group and teaches Kiro the workflows, vocabulary and honesty rules the connector expects. Content is derived from the connector's own skill pack, curated prompts and tool registrations, not written from memory. Reference a skill by name in Kiro chat to activate it (for example `#policy-manager`).
