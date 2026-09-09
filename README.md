@@ -6,7 +6,7 @@ Native turns security architecture into enforced guardrails. Instead of scanning
 
 ## What It Does
 
-This power gives Kiro the ability to operate on your Native tenant through the [Native MCP connector](https://github.com/rocksteady-cloud/native-mcp-connector), and brings in operational guidance through six skills derived from the connector's own doctrine. Instead of switching between your IDE, the Native console and four cloud consoles, you can ask Kiro things like:
+This power gives Kiro the ability to operate on your Native tenant through the [Native MCP connector](https://docs.native.security/integrations/ai-agents), and brings in operational guidance through six skills derived from the connector's own doctrine. Instead of switching between your IDE, the Native console and four cloud consoles, you can ask Kiro things like:
 
 - "Summarize my Native tenant and flag any organization with drift"
 - "Which policies are effective on the production OU, and what regions do they allow?"
@@ -293,7 +293,6 @@ The power follows the [Agent Plugins](https://agent-plugins.org) format that Kir
 ## Resources
 
 - [Native docs: AI agents and the MCP connector](https://docs.native.security/integrations/ai-agents)
-- [Native MCP connector source and tool inventory](https://github.com/rocksteady-cloud/native-mcp-connector)
 - [Native Security](https://native.security)
 - [Kiro powers: create your own](https://kiro.dev/docs/powers/create/)
 - [Agent Plugins specification](https://agent-plugins.org)
