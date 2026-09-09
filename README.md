@@ -71,138 +71,140 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 **Connector & Session**
 
 | Tool | Description |
-|------|-------------|
-| `who_am_i` | Identify the current user: name, email, selected tenant, permissions, roles |
-| `list_organizations` | List the tenant's onboarded organizations the user has a role in |
-| `list_capabilities` | Enumerate the tool groups, prompts and resources available to this session |
-| `get_prompt` | Fetch the body of one curated workflow prompt (scope, drift-triage, prepare-change, ...) |
-| `read_resource` | Read one published resource (terminology, capability matrix, troubleshooting, CNAPP sources, policy kinds) |
-| `get_console_link` | Return a Native console deep link for any task or resource |
-| `get_whats_new` | Surface Native's published What's New posts, optionally by category or date |
-| `self_test` | Probe auth, environment, policy, coverage, plan and apply, with remediation per section |
-| `revoke_session` | Revoke this MCP session so the next call requires a fresh sign-in |
+|---|---|
+| `who_am_i` | Identify the current user: name, email, selected tenant, permissions, roles, and tenant logo. |
+| `list_organizations` | List the tenant's onboarded organizations the user has a role in. |
+| `list_capabilities` | Enumerate the tool groups available to this session (filtered by granted scopes). |
+| `get_prompt` | Fetch the body of one of the connector's curated MCP prompts (drift-triage, prepare-change, recommend-next, …). |
+| `read_resource` | Read the content of one of the connector's published MCP resources (terminology map, capability matrix, troubleshooting playbooks, policy-kinds catalogue). |
+| `get_console_link` | Return a Native console deep link for any task or resource the user wants to see in the UI. |
+| `get_whats_new` | Surface Native's published 'What's New' posts (new policies, capabilities, integrations, incidents). |
+| `self_test` | Probe every section of the connector (auth, environment, policy, policy_coverage, plan, apply) in parallel, report per-section status + remediation, and name the MCP revision this session negotiated. |
+| `revoke_session` | Revoke this MCP session immediately so subsequent calls require a new sign-in. (write) |
 
 **Environment**
 
 | Tool | Description |
-|------|-------------|
-| `environment_summarize` | Summarize the tenant's cloud footprint or one organization in a single call |
-| `environment_list_cloud_units` | Enumerate accounts, subscriptions, projects and compartments, with hierarchy paths |
-| `environment_get_cloud_unit_details` | One cloud unit in full: services, regions, cost, owners, policy counts, blocked actions, CNAPP and sensitivity digests |
-| `environment_get_organization_tree` | The full OU, management-group, folder or compartment hierarchy of one organization |
-| `environment_list_zones` | List zones across the tenant or in one organization |
-| `environment_get_zone_overview` | One zone's topology, connectivity headline, CNAPP digest, sensitivity, cost, services, owners and policy counts |
-| `environment_get_zone_inventory` | Zone-level used services, used regions and resource statistics |
-| `environment_triage_inventory_item` | Look up a cloud unit by its external id (account number, subscription id, project id, OCID) |
-| `environment_list_effective_policies` | Policies effective on a tenant, organization, zone or cloud unit, direct versus inherited |
-| `environment_explain_coverage_risks` | For each policy with missing or partial coverage in scope, explain why it matters |
-| `environment_show_sync_status` | Per-organization sync status, last sync time and template freshness |
-| `environment_get_zone_connectivity` | A zone's dedicated circuits, private endpoints and site-to-site VPNs (flagged) |
-| `environment_summarize_connectivity` | Estate-wide rollup of connections, network hubs and zone peers (flagged) |
-| `environment_get_zone_relationships` | A zone's parents, children, siblings, intersections and identical zones (flagged) |
-| `environment_summarize_data_sensitivity` | Sensitive-resource counts by rating, type and source, with a coverage block (flagged) |
-| `environment_list_sensitive_resources` | The rated buckets and datastores in a scope, attributed to the scanner (flagged) |
+|---|---|
+| `environment_summarize` | Summarize the tenant's cloud footprint or one organization in a single call. |
+| `environment_list_cloud_units` | Enumerate cloud units across the tenant or within one organization. |
+| `environment_get_cloud_unit_details` | Return one cloud unit's services, regions, cost, owners, third parties, policy installation counts, recent Blocked Actions, CNAPP digest and account data-sensitivity block. |
+| `environment_get_organization_tree` | Return the full cloud organization hierarchy for one Native organization. |
+| `environment_list_zones` | List zones across the tenant or in one organization. |
+| `environment_get_zone_overview` | Return one zone's topology (derived booleans + connectivity headline), CNAPP digest, data sensitivity, cost-by-category, used services / regions, owners, and policy counts. |
+| `environment_get_zone_inventory` | Return zone-level used services, used regions, and resource statistics. |
+| `environment_triage_inventory_item` | Look up a cloud unit by its cloud-unit-level external id and return its details. |
+| `environment_list_effective_policies` | List policies effective on a tenant / organization / zone / cloud unit, with totals and (zone-only) direct vs inherited source. |
+| `environment_explain_coverage_risks` | For each policy whose coverage is missing or partial in scope, explain why the policy matters (sourced from PolicyDetailsV2.whyThisPolicyMatters). |
+| `environment_show_sync_status` | Per-organization sync status: current status, last sync time, most recent workflow, onboarding template freshness. |
+| `environment_get_zone_connectivity` | Return one zone's external connections — dedicated circuits, private endpoints and site-to-site VPNs — with the derived booleans, optional network hubs and zone peers, and one connection in full detail. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_summarize_connectivity` | Roll up the estate's external connections, network hubs and zone peers in one call: counts by kind, provider, state and risk flag, hubs folded by union, each peer edge once, and which risk flags have a producer. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_get_zone_relationships` | Return one zone's structural relationships — parents, children, siblings, intersections and identical zones — so scope overlap can be reasoned about before a policy install. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_summarize_data_sensitivity` | Count sensitive resources by rating, sensitivity type, source and resource type for a tenant, organization, zone or cloud unit, with a coverage block naming what was scanned. (flagged: `FLAG_MCP_CONNECTOR_DSPM_TOOLS`) |
+| `environment_list_sensitive_resources` | List the resources carrying a sensitivity rating in one organization, cloud unit or zone, each attributed to the scanner that rated it. (flagged: `FLAG_MCP_CONNECTOR_DSPM_TOOLS`) |
 
 **Policy: Discover & Explain**
 
 | Tool | Description |
-|------|-------------|
-| `policy_list_catalog` | Paginated catalog of every policy template with providers, scopes, domains and deployment counts |
-| `policy_explain` | Plain-language explanation of one template with its goal and deployment summary |
-| `policy_list_controls` | Enforcement mechanisms per template (SCP, Azure Policy, GCP Org Policy, reactive controls) |
-| `policy_search_parameters` | Search every template's declared parameters by keyword, provider or catalog |
-| `policy_get_parameter_definitions` | Parameter schema, defaults, options and resolved allowed values for one template |
-| `policy_list_vocabulary` | Canonical cloud services, AI models or regions for one provider |
-| `policy_get_effective_parameters` | The parameter values in effect for one template across a scope |
-| `policy_get_history` | Revision history of a template, or one revision's coverage |
+|---|---|
+| `policy_list_catalog` | Paginated listing of every policy template in the Native catalog (the agent's discovery surface for policy_explain / policy_recommend_next / policy_suggest_intention). |
+| `policy_explain` | Explain a policy template in plain language: title, why it matters, implementation description, supported cloud providers and target scopes, plus a deployment summary (Intention counts by status state per the canonical Draft/Acti… |
+| `policy_list_controls` | List enforcement mechanisms (SCP, Azure Policy, GCP Org Policy, native reactive controls) per policy template, grouped by enforcement vs native + per-cloud-provider counts. |
+| `policy_search_parameters` | Search every managed policy template's declared parameters in one call — the cross-template discovery surface for "which policy can configure X?" questions. |
+| `policy_get_parameter_definitions` | Return the backend-authored parameter schema, defaults, curated options, provider applicability, and optionally resolved region/service values for one managed policy template. |
+| `policy_list_vocabulary` | List the canonical value universe for one vocabulary kind (cloud services, AI models, or regions) on one cloud provider — the ids that policy parameter allowedValues join against. |
+| `policy_get_effective_parameters` | Return the effective parameter values (allowed regions, encryption flags, etc.) for one policy template across the intentions deployed in a scope. |
+| `policy_get_history` | Read the revision history of a policy template (template-rollup) or drill into one revision's coverage (revision mode). |
 
 **Policy: State, Coverage & Drift**
 
 | Tool | Description |
-|------|-------------|
-| `policy_list_intentions` | Deployed intentions in a scope with status, health, coverage and recent violations |
-| `policy_inspect_cloud_object` | Which templates cover one cloud object, with optional live-state drill-down and action items |
-| `policy_check_drift` | Drifting intentions in a scope, freshest first |
-| `policy_compliance_coverage` | Regulatory-framework rollup (CIS, NIST, SOC 2, HIPAA and others) |
-| `policy_cross_org_coverage` | Per-template, per-organization installation matrix |
-| `policy_get_org_settings` | Org-level defaults: drift recovery, review requirements, attachment limits, break-glass list |
-| `policy_get_breakglass_roles` | The organization's break-glass identities |
+|---|---|
+| `policy_list_intentions` | List deployed Intentions in a scope (tenant by default; or organization / zone / cloudUnit when specified) with their status state, derived health, coverage, recent violation counts, target scope UUIDs, plan memberships, and anno… |
+| `policy_inspect_cloud_object` | Inspect one cloud object (account, project, OU, …): which policy templates cover it, per-template coverage (installed/partial/missing/notInstalled), and an optional per-template drill-down into the live policy state. |
+| `policy_check_drift` | List drifting Intentions in a scope (status.state="drift" — Intentions whose desired state has diverged from the actual cloud state). |
+| `policy_compliance_coverage` | Roll up regulatory-framework coverage (CIS, NIST, SOC 2, HIPAA, …) by composing the policy catalog's complianceStandards tags with the per-template enforcement-mechanism counts. |
+| `policy_cross_org_coverage` | Compare policy coverage across all organizations in the tenant in one call. |
+| `policy_get_org_settings` | Read the org-level policy defaults: drift recovery, auto-import tracking, review requirements, attachment limits, plus the breakglass identity list. |
+| `policy_get_breakglass_roles` | List the org's breakglass identities (emergency-bypass IAM principals that escape policy enforcement). |
 
 **Policy: Recommend & Tune**
 
 | Tool | Description |
-|------|-------------|
-| `policy_recommend_next` | The next policy to deploy, with the reason it matters now |
-| `policy_list_recommendations` | Every attention-worthy intention (draft, drift, error) across plans |
-| `policy_suggest_intention` | Scope-aware default parameters for a new intention |
-| `policy_get_optimization` | The backend's optimization suggestion for one intention |
-| `policy_dismiss_optimization` | Dismiss an optimization suggestion (preference write) |
-| `policy_update_annotations` | Merge metadata annotations into an intention (write) |
+|---|---|
+| `policy_recommend_next` | Recommend the next policy to deploy by walking Getting Started -> AI Guardrails -> Multi-Cloud Alignment, falling back to a structured guidance prompt when no plan applies. |
+| `policy_list_recommendations` | Full paginated listing of every attention-worthy Intention across every plan (Draft / drift / error). |
+| `policy_suggest_intention` | Pre-fill the parameters object for a new Intention before calling policy_prepare_change. |
+| `policy_get_optimization` | Fetch the backend's optimization suggestion for one Intention. |
+| `policy_dismiss_optimization` | Mark an optimization as dismissed so the reconciler stops re-suggesting it for this Intention. (write) |
+| `policy_update_annotations` | Merge user-supplied metadata.annotations into an Intention's desired-state document. (write) |
 
 **Policy: Preview, IaC & Change**
 
 | Tool | Description |
-|------|-------------|
-| `policy_simulate` | Read-only impact preview with coverage attestation and a paste-ready evidence report |
-| `policy_show_implementation_steps` | The concrete per-object steps the backend would execute |
-| `policy_generate_iac` | Render a policy action and targets as Terraform |
-| `policy_prepare_change` | Create a Draft Intention and return its change id and confirmation phrase (write) |
-| `policy_apply_change` | Flip the Draft to enforcing (**destructive**, confirmation phrase) |
-| `policy_revert_to_revision` | Rewrite an intention to a prior revision (**destructive**, confirmation phrase) |
-| `policy_abort_execution` | Abort an in-progress execution (**destructive**, confirmation phrase) |
-| `policy_set_drift_recovery` | Toggle automatic drift recovery on one intention (**destructive**, confirmation phrase) |
-| `policy_delete_intention` | Permanently delete an intention (**destructive**, confirmation phrase) |
+|---|---|
+| `policy_simulate` | Read-only preview of a policy's impact on an environment, WITHOUT creating a Draft Intention. |
+| `policy_show_implementation_steps` | Compute the concrete per-cloud-object steps the backend would execute to apply a PolicyAction to the given targets. |
+| `policy_generate_iac` | Render a PolicyAction + targets directly as Infrastructure-as-Code (Terraform today). |
+| `policy_prepare_change` | Create a Draft Intention on the backend (status.state=pending) AFTER the user has confirmed the parameters policy_suggest_intention proposed. (write) |
+| `policy_apply_change` | Flip the Draft Intention created by policy_prepare_change to enforcing. (**destructive**, confirmation phrase) |
+| `policy_revert_to_revision` | Rewrite an Intention's desired state to a prior revision. DESTRUCTIVE — gated by FLAG_MCP_CONNECTOR_APPLY_CHANGE and a deterministic confirmation phrase the user must echo back. (**destructive**, confirmation phrase) |
+| `policy_abort_execution` | Abort an in-progress execution on an Intention (only valid while statusState is in-progress / deleting). (**destructive**, confirmation phrase) |
+| `policy_set_drift_recovery` | Toggle automatic drift recovery on a single Intention. ENABLING is destructive (Native will auto-remediate cloud state on drift); DISABLING reverts to manual remediation. (**destructive**, confirmation phrase) |
+| `policy_delete_intention` | Permanently delete an Intention (its desired-state document and any associated drafts). (**destructive**, confirmation phrase) |
 
 **Policy: Exceptions & Plans**
 
 | Tool | Description |
-|------|-------------|
-| `policy_search_exceptions` | Configured exclusions and break-glass identities, with facets and reverse lookup |
-| `policy_list_exception_subjects` | Distinct excluded values on one dimension (identity, resource, tag, cloud unit, CIDR) |
-| `plan_list` | Tenant-visible plans with optional progress |
-| `plan_get_status` | One plan's breakdown, progress and recommended next action |
+|---|---|
+| `policy_search_exceptions` | Search the tenant's configured policy exceptions — the exclusions declared on intentions plus organization break-glass identities — with typed filters, KPI facet counts and a reverse lookup answering "which policies exclude this… |
+| `policy_list_exception_subjects` | List the distinct values actually excluded on one subject dimension (identity, resource, tag, cloudUnitId, cidr) so a policy_search_exceptions reverse lookup is offered real choices instead of a guessed ARN. |
+| `plan_list` | List tenant-visible plans (Getting Started, AI Guardrails, Multi-Cloud Alignment, user-created, shared-target-list). |
+| `plan_get_status` | Fetch one plan's per-status-state intention breakdown, progress percentage, and the agent's recommended next action (highest-priority attention-worthy intention in the plan: Draft > drift > error). |
 
 **Intention Review**
 
 | Tool | Description |
-|------|-------------|
-| `intention_get_suggested_reviewers` | The organization's suggested reviewers for an intention |
-| `intention_start_review` | Open a peer review on a Draft Intention (write) |
-| `intention_get_review_status` | Review status, approval count, participant decisions and history |
-| `intention_record_decision` | Record the signed-in user's approve or reject decision (write) |
-| `intention_add_note` | Add a comment without a decision (write) |
-| `intention_add_reviewer` | Invite additional reviewers (write) |
-| `intention_remove_reviewer` | Remove a reviewer who has not yet decided (write) |
-| `intention_resend_reviewer_notification` | Re-send the invitation to one reviewer (write) |
-| `intention_cancel_review` | Withdraw an in-progress review (write) |
+|---|---|
+| `intention_get_suggested_reviewers` | Fetch the org's suggested reviewers for this Intention. Backend computes the list from intention owners, scope stakeholders, and security contacts. |
+| `intention_start_review` | Open a peer-review on a Draft Intention before applying it. Sends invites to the reviewer emails the user provided (or to suggested reviewers from intention_get_suggested_reviewers). (write) |
+| `intention_get_review_status` | Read the current ReviewState of the Intention's open review: reviewStatus, approval count vs. |
+| `intention_record_decision` | Record the calling user's approve/reject decision on a review. (write) |
+| `intention_add_note` | Append a comment to a review without recording a decision. The note shows up in ReviewState.history for every participant. (write) |
+| `intention_add_reviewer` | Invite additional reviewers to an existing review. Useful when the initial invitees haven't acted, or the user wants additional sign-off. (write) |
+| `intention_remove_reviewer` | Remove an invited reviewer who hasn't yet acted. Returns 409 if the reviewer already recorded a decision (the audit trail is immutable). (write) |
+| `intention_resend_reviewer_notification` | Re-send the review notification to a single reviewer who hasn't yet acted (e.g. (write) |
+| `intention_cancel_review` | Cancel an in-progress review. Returns 409 if the review is already approved (the audit trail is immutable past approval). (write) |
 
 **Deployment Health**
 
 | Tool | Description |
-|------|-------------|
-| `deployment_health_check` | Is a policy apply, or an organization at a point in time, healthy: anomalies, deny trend, advisory verdict |
-| `deployment_health_deny_series` | Blocked-action trend over time for an intention or organization |
-| `deployment_health_get_metrics` | Specific health-metric series plus anomalies |
-| `deployment_health_list_metrics` | The health-metric catalog |
-| `deployment_health_apply_events` | When an intention was applied, re-applied or drift-recovered |
-| `deployment_health_scope_search` | Find an OU or account scope by free text to narrow a retrieval |
+|---|---|
+| `deployment_health_check` | Answer "did this policy's recent apply break anything — keep it or revert?" for one intention, or inspect an organization's health at a point in time. |
+| `deployment_health_deny_series` | Blocked-action (denial) trend over time for an intention or an organization — the attributed and unattributed layers plus a spike-vs-baseline summary. |
+| `deployment_health_get_metrics` | Fetch specific health-metric series (by id) plus anomalies for an intention or organization. |
+| `deployment_health_list_metrics` | Browse the available health metrics (the catalog the dashboard's "Add health metric" picker uses), with title and description per metric. |
+| `deployment_health_apply_events` | When did this intention apply? Returns the apply-relevant lifecycle transitions (markers) for one intention over the recent past. |
+| `deployment_health_scope_search` | Find an OU or account (a scopeId) within an organization by free-text. |
+
+**CNAPP (flagged)**
+
+| Tool | Description |
+|---|---|
+| `cnapp_get_posture` | Report CNAPP findings and Risks by finding source for a tenant, organization, zone or cloud unit, with a coverage block that says which sources could have reported at all. (flagged: `FLAG_MCP_CONNECTOR_CNAPP_TOOLS`) |
+| `cnapp_list_findings` | List one cloud unit's open CNAPP findings per managed policy, by severity and finding source, so an agent can say which Native policy would remove the most of them. (flagged: `FLAG_MCP_CONNECTOR_CNAPP_TOOLS`) |
 
 **Blocked Actions & Custom Policies**
 
 | Tool | Description |
-|------|-------------|
-| `blocked_actions_search` | Search denied attempts by action, identity, region, policy, intention and time window |
-| `blocked_actions_get` | One blocked-action event in full, with the raw provider audit event |
-| `blocked_actions_filter_values` | Distinct values for one filterable field |
-| `custom_policy_list` | List user-authored custom policies |
-| `custom_policy_explain` | One custom policy in full, with per-provider statement bodies |
+|---|---|
+| `blocked_actions_search` | Search blocked-action (denial) events with friendly filters — action/identity substring, region, policy template or intention, identity type, and a relative or ISO time window. |
+| `blocked_actions_get` | Fetch one blocked-action event by id with full forensic detail — the raw provider audit event plus connector-enriched links to the Native intentions that produced the denial. |
+| `blocked_actions_filter_values` | List the distinct values present for one filterable field (identityType, identityName, region, policyIds, actionType, policyType, thirdParty) in a scope/window, so you can offer concrete choices before calling blocked_actions_sea… |
+| `custom_policy_list` | List user-authored custom policies. Composes GET /v2/policy-management/policies with type=Custom; paginates client-side because the endpoint has no page cursor. |
+| `custom_policy_explain` | Read one user-authored custom policy in full: metadata, per-provider statement bodies (AWS / Azure / GCP / OCI), security domains. |
 
 **CNAPP** (flagged)
-
-| Tool | Description |
-|------|-------------|
-| `cnapp_get_posture` | Findings and Risks by source for a tenant, organization, zone or cloud unit, with coverage |
-| `cnapp_list_findings` | One cloud unit's open findings per managed policy, by severity and source, with optional detail |
 
 ### Skills: 6 Operational Guidance Modules
 

@@ -22,17 +22,19 @@ The `connector` group is the plumbing every other skill relies on: identity, cap
 
 ## Tools
 
+### Tools
+
 | Tool | What it does |
 |---|---|
-| `who_am_i` | The signed-in user: name, email, selected tenant, permissions, roles, tenant logo. |
-| `list_organizations` | Onboarded organizations the user has a role in: `id`, `cloudProvider`, `name`, `rootOuCloudUnit`, `rootNodeId`. |
-| `list_capabilities` | The capability manifest filtered to this session's scopes: tool groups, tools, `promptCatalog`, `resourceCatalog`. |
-| `get_prompt` | The body of one curated prompt by name (for example `scope`, `terminology`, `drift-triage`, `prepare-change`). Static; fetch once per conversation. |
-| `read_resource` | One published resource by URI (`resource://native/terminology`, `capability-matrix`, `install-snippets`, `parameter-semantics`, `cnapp-sources`, `policy-kinds`, `troubleshooting/<topic>`). Static; cache the first read. |
-| `get_console_link` | A Native console deep link with URL, page title, breadcrumb and click sequence for a task or resource. |
-| `get_whats_new` | Native's published What's New posts. Optional `since` (RFC 3339) and `category` (`Policies`, `Product`, `Integrations`, `Incidents`). Cached 5 minutes. |
-| `self_test` | One-shot diagnostic across auth, environment, policy, policy_coverage, plan and apply, with per-section status and remediation, plus the negotiated MCP revision. |
-| `revoke_session` | Drops this session immediately; the next call requires a fresh sign-in. |
+| `who_am_i` | Identify the current user: name, email, selected tenant, permissions, roles, and tenant logo. |
+| `list_organizations` | List the tenant's onboarded organizations the user has a role in. |
+| `list_capabilities` | Enumerate the tool groups available to this session (filtered by granted scopes). |
+| `get_prompt` | Fetch the body of one of the connector's curated MCP prompts (drift-triage, prepare-change, recommend-next, …). |
+| `read_resource` | Read the content of one of the connector's published MCP resources (terminology map, capability matrix, troubleshooting playbooks, policy-kinds catalogue). |
+| `get_console_link` | Return a Native console deep link for any task or resource the user wants to see in the UI. |
+| `get_whats_new` | Surface Native's published 'What's New' posts (new policies, capabilities, integrations, incidents). |
+| `self_test` | Probe every section of the connector (auth, environment, policy, policy_coverage, plan, apply) in parallel, report per-section status + remediation, and name the MCP revision this session negotiated. |
+| `revoke_session` | Revoke this MCP session immediately so subsequent calls require a new sign-in. (write) |
 
 ## Step-by-step
 

@@ -23,14 +23,16 @@ Vocabulary note: the backend calls each signal a *capability*; the agent surface
 
 ## Tools
 
+### Tools
+
 | Tool | What it does |
 |---|---|
-| `deployment_health_check` | Whether a policy apply (or an organization at a point in time) is healthy: anomalies, deny trend versus baseline, and an advisory verdict. |
-| `deployment_health_deny_series` | Blocked-action trend over time for an intention or an organization: attributed and unattributed layers plus a spike-versus-baseline summary. Reads persisted denials only. |
-| `deployment_health_get_metrics` | Specific health-metric series by id plus anomalies. Escape hatch for callers who already know the metric ids. |
-| `deployment_health_list_metrics` | The health-metric catalog: id, title, description, kind, feasibility. |
-| `deployment_health_apply_events` | When an intention was applied, re-applied or drift-recovered: its apply markers over the recent past. |
-| `deployment_health_scope_search` | Finds an OU or account (`scopeId`) inside an organization by free text, up to 50 matches. The recovery primitive when a metric retrieval is too large. |
+| `deployment_health_check` | Answer "did this policy's recent apply break anything — keep it or revert?" for one intention, or inspect an organization's health at a point in time. |
+| `deployment_health_deny_series` | Blocked-action (denial) trend over time for an intention or an organization — the attributed and unattributed layers plus a spike-vs-baseline summary. |
+| `deployment_health_get_metrics` | Fetch specific health-metric series (by id) plus anomalies for an intention or organization. |
+| `deployment_health_list_metrics` | Browse the available health metrics (the catalog the dashboard's "Add health metric" picker uses), with title and description per metric. |
+| `deployment_health_apply_events` | When did this intention apply? Returns the apply-relevant lifecycle transitions (markers) for one intention over the recent past. |
+| `deployment_health_scope_search` | Find an OU or account (a scopeId) within an organization by free-text. |
 
 ## How `deployment_health_check` works
 
