@@ -6,7 +6,7 @@ Native turns security architecture into enforced guardrails. Instead of scanning
 
 ## What It Does
 
-This power gives Kiro the ability to operate on your Native tenant through the [Native MCP connector](https://docs.native.security/integrations/ai-agents), and brings in operational guidance through six skills derived from the connector's own doctrine. Instead of switching between your IDE, the Native console and four cloud consoles, you can ask Kiro things like:
+This power gives Kiro the ability to operate on your Native tenant through the [Native MCP connector](https://docs.native.security/integrations/ai-agents), and brings in operational guidance through seven skills derived from the connector's own doctrine. Instead of switching between your IDE, the Native console and four cloud consoles, you can ask Kiro things like:
 
 - "Summarize my Native tenant and flag any organization with drift"
 - "Which policies are effective on the production OU, and what regions do they allow?"
@@ -17,7 +17,7 @@ This power gives Kiro the ability to operate on your Native tenant through the [
 - "How many CNAPP findings do we have, and from which scanner?"
 - "Where is our sensitive data, and are those accounts protected?"
 
-Kiro will call the right tools in the right order, respect Native's tenant-default scope rule, and never apply a destructive change without you typing the confirmation phrase back. Everything is grounded in [6 skills](#skills-6-operational-guidance-modules) that mirror the connector's shipped surface: 81 tools in 9 groups.
+Kiro will call the right tools in the right order, respect Native's tenant-default scope rule, and never apply a destructive change without you typing the confirmation phrase back. Everything is grounded in [7 skills](#skills-7-operational-guidance-modules) that mirror the connector's shipped surface: 81 tools in 9 groups.
 
 ## Quick Start
 
@@ -204,9 +204,9 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 | `custom_policy_list` | List user-authored custom policies. Composes GET /v2/policy-management/policies with type=Custom; paginates client-side because the endpoint has no page cursor. |
 | `custom_policy_explain` | Read one user-authored custom policy in full: metadata, per-provider statement bodies (AWS / Azure / GCP / OCI), security domains. |
 
-### Skills: 6 Operational Guidance Modules
+### Skills: 7 Operational Guidance Modules
 
-Each skill wraps one connector tool group and teaches Kiro the workflows, vocabulary and honesty rules the connector expects. Content is derived from the connector's own skill pack, curated prompts and tool registrations, not written from memory. Reference a skill by name in Kiro chat to activate it (for example `#policy-manager`).
+Six skills wrap one connector tool group each, and one (Secure-by-Design IaC) sequences tools across groups; all teach Kiro the workflows, vocabulary and honesty rules the connector expects. Content is derived from the connector's own skill pack, curated prompts and tool registrations, not written from memory. Reference a skill by name in Kiro chat to activate it (for example `#policy-manager`).
 
 **Environment Explorer**
 - Apply the tenant-default scope rule: default to the tenant, narrow only when the user names an account, zone or organization, resolve parents automatically
@@ -220,6 +220,11 @@ Each skill wraps one connector tool group and teaches Kiro the workflows, vocabu
 - Simulate before every change, read the evidence report, and surface missing impact previews before offering to apply
 - Run both confirmation-gate flows correctly: prepare-then-apply, and same-tool two-call for revert, abort, delete and drift recovery
 - Distinguish configured exceptions from actual denials, and track plan progress
+
+**Secure-by-Design IaC**
+- Build Terraform, CloudFormation, Bicep, Pulumi or Helm for a specific cloud unit that is compliant with Native policies from the first draft
+- Resolve the target cloud unit, read the effective policies and their parameters, then write code that already honours them and cite the policy per constrained line
+- Stop and explain when a request conflicts with a policy instead of weakening the control; never claim Native "passed" a file
 
 **Intention Workflow**
 - Open peer reviews with suggested reviewers and attached simulation evidence
@@ -256,6 +261,8 @@ Each skill wraps one connector tool group and teaches Kiro the workflows, vocabu
     │   └── SKILL.md                  # Estate, zones, effective policies, connectivity, sensitive data
     ├── policy-manager/
     │   └── SKILL.md                  # Catalog, parameters, drift, simulation, IaC, the apply gate, exceptions, plans
+    ├── secure-by-design-iac/
+    │   └── SKILL.md                  # Policy-first infrastructure code for a cloud unit (build, do not scan)
     ├── intention-workflow/
     │   └── SKILL.md                  # Peer review of a Draft Intention before apply
     ├── posture-and-findings/
