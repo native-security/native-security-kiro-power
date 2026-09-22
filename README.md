@@ -41,7 +41,9 @@ Or clone this repository and import the directory as a local power.
 
 ### 2. Sign In
 
-The first time Kiro calls a Native tool, a browser tab opens for the Native sign-in (OAuth 2.1 via Descope). Sign in with your Native account. Kiro receives a token bound to your user and tenant; nothing is stored in the power.
+The first time Kiro calls a Native tool, a browser tab opens for the Native sign-in (OAuth 2.1 via Descope). Sign in with your Native account, then approve the consent screen, which reads "Connect Native with Kiro". Kiro receives a token bound to your user and tenant; nothing is stored in the power.
+
+Kiro identifies itself to Native with a hosted Client ID Metadata Document (`oauth.clientMetadataUrl` in `mcp.json`) rather than registering a fresh client on every install, so the consent screen shows Kiro's name and logo and your authorization survives reinstalls.
 
 ### 3. Verify and Start Exploring
 

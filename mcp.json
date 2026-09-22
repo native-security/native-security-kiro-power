@@ -3,7 +3,10 @@
   "mcpServers": {
     "native-security": {
       "type": "streamable-http",
-      "url": "https://mcp.native.security/mcp"
+      "url": "https://mcp.native.security/mcp",
+      "oauth": {
+        "clientMetadataUrl": "https://mcp.native.security/.well-known/clients/kiro.json"
+      }
     }
   }
 }
