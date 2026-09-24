@@ -5,7 +5,7 @@ license: MIT
 metadata:
   author: Native Security
   version: "1.0.0"
-  source: native-mcp-connector policy group (32 tools) + plan group (2 tools)
+  source: native-mcp-connector policy group (37 tools) + plan group (2 tools)
 ---
 
 # Policy Manager
@@ -30,6 +30,7 @@ Read `prompt://native/scope` (via `get_prompt`) once per session: default to the
 |---|---|
 | `policy_list_catalog` | Paginated listing of every policy template in the Native catalog (the agent's discovery surface for policy_explain / policy_recommend_next / policy_suggest_intention). |
 | `policy_explain` | Explain a policy template in plain language: title, why it matters, implementation description, supported cloud providers and target scopes, plus a deployment summary (Intention counts by status state per the canonical Draft/Acti… |
+| `policy_get_blueprint` | Explain how a managed policy is implemented on one organization's cloud: the backend composes a representative policy document (every action type the provider supports, sample exclusions; any field the caller overrides is used as… |
 | `policy_list_controls` | List enforcement mechanisms (SCP, Azure Policy, GCP Org Policy, native reactive controls) per policy template, grouped by enforcement vs native + per-cloud-provider counts. |
 | `policy_search_parameters` | Search every managed policy template's declared parameters in one call — the cross-template discovery surface for "which policy can configure X?" questions. |
 | `policy_get_parameter_definitions` | Return the backend-authored parameter schema, defaults, curated options, provider applicability, and optionally resolved region/service values for one managed policy template. |
@@ -80,6 +81,10 @@ Read `prompt://native/scope` (via `get_prompt`) once per session: default to the
 |---|---|
 | `policy_search_exceptions` | Search the tenant's configured policy exceptions — the exclusions declared on intentions plus organization break-glass identities — with typed filters, KPI facet counts and a reverse lookup answering "which policies exclude this… |
 | `policy_list_exception_subjects` | List the distinct values actually excluded on one subject dimension (identity, resource, tag, cloudUnitId, cidr) so a policy_search_exceptions reverse lookup is offered real choices instead of a guessed ARN. |
+| `policy_list_exception_reminders` | List the reminders scheduled on one configured exception, with each reminder's resolved status. |
+| `policy_create_exception_reminder` | Schedule a new reminder on one configured exception, so its owner is notified on the chosen channels at a future time instead of the exception silently reverting or being deleted. (write) |
+| `policy_update_exception_reminder` | Edit or snooze one existing exception reminder by replacing its remindAt and channels wholesale. (write) |
+| `policy_delete_exception_reminder` | Remove one reminder from a configured exception, cancelling its pending delivery if any. (write) |
 
 ### Plans
 
