@@ -29,7 +29,7 @@ Vocabulary note: the backend calls each signal a *capability*; the agent surface
 | `deployment_health_deny_series` | Blocked-action (denial) trend over time for an intention or an organization — the attributed and unattributed layers plus a spike-vs-baseline summary. |
 | `deployment_health_get_metrics` | Fetch specific health-metric series (by id) plus anomalies for an intention or organization. |
 | `deployment_health_list_metrics` | Browse the available health metrics (the catalog the dashboard's "Add health metric" picker uses), with title and description per metric. |
-| `deployment_health_apply_events` | When did this intention apply? Returns the apply-relevant lifecycle transitions (markers) for one intention over the recent past. |
+| `deployment_health_apply_events` | When did this intention apply? Returns only apply-relevant lifecycle transitions (markers) for one intention over the recent past. |
 | `deployment_health_scope_search` | Find an OU or account (a scopeId) within an organization by free-text. |
 
 ## How `deployment_health_check` works

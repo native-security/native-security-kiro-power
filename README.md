@@ -17,7 +17,7 @@ This power gives Kiro the ability to operate on your Native tenant through the [
 - "How many CNAPP findings do we have, and from which scanner?"
 - "Where is our sensitive data, and are those accounts protected?"
 
-Kiro will call the right tools in the right order, respect Native's tenant-default scope rule, and never apply a destructive change without you typing the confirmation phrase back. Everything is grounded in [7 skills](#skills-7-operational-guidance-modules) that mirror the connector's shipped surface: 81 tools in 9 groups.
+Kiro will call the right tools in the right order, respect Native's tenant-default scope rule, and never apply a destructive change without you typing the confirmation phrase back. Everything is grounded in [7 skills](#skills-7-operational-guidance-modules) that mirror the connector's shipped surface: 86 tools in 9 groups.
 
 ## Quick Start
 
@@ -66,7 +66,7 @@ Then explore, check, and change:
 
 ### MCP Tools
 
-All 81 tools of the Native MCP connector. Read-only unless marked. Five tools are **destructive** and require a confirmation phrase that you type back; Kiro is instructed never to auto-fill it. Three groups are feature-flagged on the Native side and may be absent from your session; ask Kiro to check `list_capabilities`.
+All 86 tools of the Native MCP connector. Read-only unless marked. Five tools are **destructive** and require a confirmation phrase that you type back; Kiro is instructed never to auto-fill it. Three groups are feature-flagged on the Native side and may be absent from your session; ask Kiro to check `list_capabilities`.
 
 **Connector & Session**
 
@@ -109,12 +109,13 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 |---|---|
 | `policy_list_catalog` | Paginated listing of every policy template in the Native catalog (the agent's discovery surface for policy_explain / policy_recommend_next / policy_suggest_intention). |
 | `policy_explain` | Explain a policy template in plain language: title, why it matters, implementation description, supported cloud providers and target scopes, plus a deployment summary (Intention counts by status state per the canonical Draft/Acti… |
+| `policy_get_blueprint` | Explain how a managed policy is implemented on one organization's cloud: the backend composes a representative policy document (every action type the provider supports, sample exclusions; any field the caller overrides is used as… |
 | `policy_list_controls` | List enforcement mechanisms (SCP, Azure Policy, GCP Org Policy, native reactive controls) per policy template, grouped by enforcement vs native + per-cloud-provider counts. |
 | `policy_search_parameters` | Search every managed policy template's declared parameters in one call — the cross-template discovery surface for "which policy can configure X?" questions. |
 | `policy_get_parameter_definitions` | Return the backend-authored parameter schema, defaults, curated options, provider applicability, and optionally resolved region/service values for one managed policy template. |
 | `policy_list_vocabulary` | List the canonical value universe for one vocabulary kind (cloud services, AI models, or regions) on one cloud provider — the ids that policy parameter allowedValues join against. |
 | `policy_get_effective_parameters` | Return the effective parameter values (allowed regions, encryption flags, etc.) for one policy template across the intentions deployed in a scope. |
-| `policy_get_history` | Read the revision history of a policy template (template-rollup) or drill into one revision's coverage (revision mode). |
+| `policy_get_history` | Read legacy organization policy-state revisions by policy template, or drill into one revision's cloud-object coverage. |
 
 **Policy: State, Coverage & Drift**
 
@@ -148,7 +149,7 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 | `policy_generate_iac` | Render a PolicyAction + targets directly as Infrastructure-as-Code (Terraform today). |
 | `policy_prepare_change` | Create a Draft Intention on the backend (status.state=pending) AFTER the user has confirmed the parameters policy_suggest_intention proposed. (write) |
 | `policy_apply_change` | Flip the Draft Intention created by policy_prepare_change to enforcing. (**destructive**, confirmation phrase) |
-| `policy_revert_to_revision` | Rewrite an Intention's desired state to a prior revision. DESTRUCTIVE — gated by FLAG_MCP_CONNECTOR_APPLY_CHANGE and a deterministic confirmation phrase the user must echo back. (**destructive**, confirmation phrase) |
+| `policy_revert_to_revision` | Legacy compatibility: request a policy revert from an organization's recorded policy-state revision for a cloud-object scope, not from an Intention audit event. (**destructive**, confirmation phrase) |
 | `policy_abort_execution` | Abort an in-progress execution on an Intention (only valid while statusState is in-progress / deleting). (**destructive**, confirmation phrase) |
 | `policy_set_drift_recovery` | Toggle automatic drift recovery on a single Intention. ENABLING is destructive (Native will auto-remediate cloud state on drift); DISABLING reverts to manual remediation. (**destructive**, confirmation phrase) |
 | `policy_delete_intention` | Permanently delete an Intention (its desired-state document and any associated drafts). (**destructive**, confirmation phrase) |
@@ -159,6 +160,10 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 |---|---|
 | `policy_search_exceptions` | Search the tenant's configured policy exceptions — the exclusions declared on intentions plus organization break-glass identities — with typed filters, KPI facet counts and a reverse lookup answering "which policies exclude this… |
 | `policy_list_exception_subjects` | List the distinct values actually excluded on one subject dimension (identity, resource, tag, cloudUnitId, cidr) so a policy_search_exceptions reverse lookup is offered real choices instead of a guessed ARN. |
+| `policy_list_exception_reminders` | List the reminders scheduled on one configured exception, with each reminder's resolved status. |
+| `policy_create_exception_reminder` | Schedule a new reminder on one configured exception, so its owner is notified on the chosen channels at a future time instead of the exception silently reverting or being deleted. (write) |
+| `policy_update_exception_reminder` | Edit or snooze one existing exception reminder by replacing its remindAt and channels wholesale. (write) |
+| `policy_delete_exception_reminder` | Remove one reminder from a configured exception, cancelling its pending delivery if any. (write) |
 | `plan_list` | List tenant-visible plans (Getting Started, AI Guardrails, Multi-Cloud Alignment, user-created, shared-target-list). |
 | `plan_get_status` | Fetch one plan's per-status-state intention breakdown, progress percentage, and the agent's recommended next action (highest-priority attention-worthy intention in the plan: Draft > drift > error). |
 
@@ -184,7 +189,7 @@ All 81 tools of the Native MCP connector. Read-only unless marked. Five tools ar
 | `deployment_health_deny_series` | Blocked-action (denial) trend over time for an intention or an organization — the attributed and unattributed layers plus a spike-vs-baseline summary. |
 | `deployment_health_get_metrics` | Fetch specific health-metric series (by id) plus anomalies for an intention or organization. |
 | `deployment_health_list_metrics` | Browse the available health metrics (the catalog the dashboard's "Add health metric" picker uses), with title and description per metric. |
-| `deployment_health_apply_events` | When did this intention apply? Returns the apply-relevant lifecycle transitions (markers) for one intention over the recent past. |
+| `deployment_health_apply_events` | When did this intention apply? Returns only apply-relevant lifecycle transitions (markers) for one intention over the recent past. |
 | `deployment_health_scope_search` | Find an OU or account (a scopeId) within an organization by free-text. |
 
 **CNAPP (flagged)**
@@ -278,7 +283,7 @@ The power follows the [Agent Plugins](https://agent-plugins.org) format that Kir
 ## Safety Model
 
 - Every tool call carries your own identity and tenant from the OAuth token. The power never asks for, stores or forwards a tenant id, key or password.
-- 76 of the 81 tools are read-only or change only review and metadata state. The five destructive operations require you to type a confirmation phrase back, and Kiro is instructed never to auto-fill, paraphrase or replay it.
+- 81 of the 86 tools are read-only or change only review and metadata state. The five destructive operations require you to type a confirmation phrase back, and Kiro is instructed never to auto-fill, paraphrase or replay it.
 - Scanner, cloud and user-authored text (finding titles, audit events, tag values, custom policy statements) is treated as data, never as instructions.
 - Feature-flagged groups are described as conditional, so Kiro checks what your session can actually use instead of promising a tool that is off.
 
