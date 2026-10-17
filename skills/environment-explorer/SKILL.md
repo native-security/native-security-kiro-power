@@ -5,7 +5,7 @@ license: MIT
 metadata:
   author: Native Security
   version: "1.0.0"
-  source: native-mcp-connector environment group (16 tools)
+  source: native-mcp-connector environment group (17 tools)
 ---
 
 # Environment Explorer
@@ -54,8 +54,9 @@ Canonical vocabulary lives in `resource://native/terminology` (read it with `rea
 
 | Tool | What it does |
 |---|---|
-| `environment_get_zone_connectivity` | Return one zone's external connections — dedicated circuits, private endpoints and site-to-site VPNs — with the derived booleans, optional network hubs and zone peers, and one connection in full detail. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
-| `environment_summarize_connectivity` | Roll up the estate's external connections, network hubs and zone peers in one call: counts by kind, provider, state and risk flag, hubs folded by union, each peer edge once, and which risk flags have a producer. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_get_zone_connectivity` | Return one zone's external connections — dedicated circuits, private endpoints and site-to-site VPNs — with the derived booleans, optional network hubs and zone links of every mechanism, and one connection in full detail. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_get_connected_accounts` | Return which accounts an account, a zone, a set of accounts, or the accounts outside every zone are connected to, and how — each edge's mechanism, direction, state, risk flags, via and per-side coverage — with the edge run's stat… (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
+| `environment_summarize_connectivity` | Roll up the estate's external connections, network hubs, zone links and the accounts outside every zone in one call: counts by kind, provider, state and risk flag, hubs folded by union, each zone link once, and which risk flags h… (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
 | `environment_get_zone_relationships` | Return one zone's structural relationships — parents, children, siblings, intersections and identical zones — so scope overlap can be reasoned about before a policy install. (flagged: `FLAG_MCP_CONNECTOR_CONNECTIVITY_TOOLS`) |
 
 ### Behind `FLAG_MCP_CONNECTOR_DSPM_TOOLS` (off by default)
